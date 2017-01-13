@@ -1,6 +1,7 @@
-FROM php:5.6-fpm
+FROM php:5.6-apache
 
 MAINTAINER pierre@piwik.org
+EXPOSE 80
 
 RUN apt-get update && apt-get install -y \
       libjpeg-dev \
@@ -41,5 +42,17 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
+# #Create backup and restore foolders
+# RUN mkdir /var/backup && \
+# chmod 665 /var/backup && \
+# mkdir /var/restore && \
+# chmod 665 /var/restore
+#
+# #Export Backup Folder
+# VOLUME /var/backup
+#
+# #Export restore foolder
+# VOLUME /var/restore
+
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php-fpm"]
+CMD /usr/sbin/apache2ctl -D FOREGROUND
