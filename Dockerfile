@@ -1,6 +1,6 @@
 FROM php:5.6-apache
 
-MAINTAINER pierre@piwik.org
+MAINTAINER pc_magas@openmailbox.org
 EXPOSE 80
 
 RUN apt-get update && apt-get install -y \
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
       libpng12-dev \
       libldap2-dev \
       zip \
+      mysql-client \
  && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
@@ -42,17 +43,23 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
-# #Create backup and restore foolders
-# RUN mkdir /var/backup && \
-# chmod 665 /var/backup && \
-# mkdir /var/restore && \
-# chmod 665 /var/restore
-#
-# #Export Backup Folder
-# VOLUME /var/backup
-#
-# #Export restore foolder
-# VOLUME /var/restore
+#Create backup and restore foolders
+RUN mkdir /var/backup && \
+chmod 665 /var/backup && \
+mkdir /var/restore && \
+chmod 665 /var/restore
+
+#Export Backup Folder
+VOLUME /var/backup
+
+#Export restore foolder
+VOLUME /var/restore
+
+COPY backup.php /tmp/backup.php
+
+RUN cp /tmp/backup.php /usr/local/bin/piwik_backup && \
+chown root:root /usr/local/bin/piwik_backup && \
+chmod 733 /usr/local/bin/piwik_backup
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
