@@ -19,7 +19,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --w
 
 RUN pecl install APCu geoip
 
-ENV PIWIK_VERSION 3.0.0
+ENV PIWIK_VERSION 3.0.1
 
 RUN curl -fsSL -o piwik.tar.gz \
       "https://builds.piwik.org/piwik-${PIWIK_VERSION}.tar.gz" \
@@ -43,6 +43,12 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
+ENV PIWIK_DB_HOST ""
+ENV PIWIK_DB_PORT "3306"
+ENV PIWIK_DB_USER ""
+ENV PIWIK_DB_PASSWORD ""
+ENV PIWIK_DB_NAME "piwik"
+
 #Create backup and restore foolders
 RUN mkdir /var/backup && \
 chmod 665 /var/backup && \
@@ -59,7 +65,8 @@ COPY backup.php /tmp/backup.php
 
 RUN cp /tmp/backup.php /usr/local/bin/piwik_backup && \
 chown root:root /usr/local/bin/piwik_backup && \
-chmod 733 /usr/local/bin/piwik_backup
+chmod 733 /usr/local/bin/piwik_backup && \
+rm -rf /tmp/backup
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
