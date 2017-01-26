@@ -17,7 +17,7 @@ Piwik is the leading open-source analytics platform that gives you more than jus
 You can run the Piwik container and service like so:
 
 ```bash
-docker run -d --link some-mysql:db piwik
+docker run -d --link some-mysql:db --volume ^local_dir^:/var/www/data --volume ^backup_dir^:/var/backup --volume ^restore_dir^:/var/restore -p ^some_port^:80 piwik
 ```
 
 This assumes you've already launched a suitable MySQL or MariaDB database container.
@@ -28,7 +28,7 @@ You'll now need to use a suitable reverse proxy to access the user interface; wh
 
 Once you're up and running, you'll arrive at the configuration wizard page. If you're using the compose file, at the `Database Setup` step, please enter the following:
 
-- Database Server: `db`
+- Database Server: `db` (or the name you specified during the image container)
 - Login: `root`
 - Password: MYSQL_ROOT_PASSWORD
 - Database Name: piwik (or you can choose)
@@ -37,6 +37,15 @@ And leave the rest as default.
 
 Then you can continue the installation with the super user.
 
+# Volumes
+
+The Image Exports The following Volumes:
+
+Volume Path | Description
+--- | ---
+*/var/www/html* | The direstory that piwik data exists. Please DO NOT delete the volume mount point.
+*/var/backup* | The directory path that backups are taken.
+*/var/restore* | The directory that restored backups are provided.
 
 ## GeoIP
 
@@ -52,7 +61,11 @@ In order to backup all the required info please follo theese steps:
 
 ```bash
 docker ps | grep ^piwik container name^ | awk '{print $1}'
-docker exec -ti bash
-#Inside the container exec
-docker 
+docker exec -ti ^id_of_the_container^ bash
+
+#Inside the container run
+piwik_backup
+
 ```
+
+And inside in the volume that is mounnted on `/var/backup` you will see all the backups.
