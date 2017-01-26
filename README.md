@@ -12,10 +12,6 @@ Piwik is the leading open-source analytics platform that gives you more than jus
 
 ![logo](https://rawgit.com/piwik/docker-piwik/master/logo.svg)
 
-## Usage
-
-In keeping with a 'pure' micro-services approach, this image runs a Piwik service only (in the form of FastCGI). Because of that it **must** be used with companion containers which provide a database for data storage and HTTP to FastCGI proxy/translation services for the user interface.
-
 ## Runtime
 
 You can run the Piwik container and service like so:
@@ -27,8 +23,6 @@ docker run -d --link some-mysql:db piwik
 This assumes you've already launched a suitable MySQL or MariaDB database container.
 
 You'll now need to use a suitable reverse proxy to access the user interface; which is available on TCP port 9000. Nginx provides the necessary functions for translation between HTTP and FastCGI and you can find a suitable configuration file [here](https://github.com/indiehosters/piwik/blob/master/nginx.conf).
-
-To save time putting together all these parts, you might find it easier if you use the docker-compose setup detailed at [IndieHosters/piwik](https://github.com/indiehosters/piwik).
 
 ## Piwik Installation
 
@@ -43,12 +37,22 @@ And leave the rest as default.
 
 Then you can continue the installation with the super user.
 
-## Contribute
-
-Pull requests are very welcome!
-
-We'd love to hear your feedback and suggestions in the issue tracker: [github.com/piwik/docker-piwik/issues](https://github.com/piwik/docker-piwik/issues).
 
 ## GeoIP
 
 This product includes GeoLite data created by MaxMind, available from [http://www.maxmind.com](http://www.maxmind.com).
+
+## Backup and restore
+
+This Image comes with some helpfull utility scripts for backipngup and restoring the database.
+
+### Backup
+
+In order to backup all the required info please follo theese steps:
+
+```bash
+docker ps | grep ^piwik container name^ | awk '{print $1}'
+docker exec -ti bash
+#Inside the container exec
+docker 
+```
