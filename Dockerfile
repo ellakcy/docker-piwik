@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
       libldap2-dev \
       zip \
       mysql-client \
+      rsync\
  && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
@@ -43,11 +44,6 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
-ENV PIWIK_DB_HOST ""
-ENV PIWIK_DB_PORT "3306"
-ENV PIWIK_DB_USER ""
-ENV PIWIK_DB_PASSWORD ""
-ENV PIWIK_DB_NAME "piwik"
 
 #Create backup and restore foolders
 RUN mkdir /var/backup && \
