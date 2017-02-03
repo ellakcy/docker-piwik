@@ -63,7 +63,7 @@ This Image comes with some helpfull utility scripts for backipngup and restoring
 
 ### Backup
 
-In order to backup all the required info please follo theese steps:
+In order to backup all the required info please follow theese steps:
 
 ```bash
 docker ps | grep ^piwik container name^ | awk '{print $1}'
@@ -73,5 +73,13 @@ docker exec -ti ^id_of_the_container^ bash
 piwik_backup
 
 ```
+Or you can follow this steps:
 
-And inside in the volume that is mounnted on `/var/backup` you will see all the backups.
+
+```bash
+docker ps | grep ^piwik container name^ | awk '{print $1}'
+docker exec -ti ^id_of_the_container^ piwik_backup
+
+```
+
+Either case inside in the volume that is mounnted on `/var/backup` you will see all the backups.
