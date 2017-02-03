@@ -12,6 +12,12 @@ Piwik is the leading open-source analytics platform that gives you more than jus
 
 ![logo](https://rawgit.com/piwik/docker-piwik/master/logo.svg)
 
+This is the apache variation of the oficial piwik image.
+
+## Build
+
+You can Build this image By
+
 ## Runtime
 
 You can run the Piwik container and service like so:

@@ -3,6 +3,7 @@
 <?php
 
 $config_file="/var/www/html/config/config.ini.php";
+$plugins_dir="/var/www/html/plugins";
 
 if(!file_exists($config_file))
 {
@@ -18,14 +19,15 @@ $db_user=$config['username'];
 $db_pass=$config['password'];
 $db_name=$config['dbname'];
 
-$tmp_dir='/var/backup/piwik';
+$backup_dir='/var/backup/piwik';
 
-if(!file_exists($tmp_dir))
+if(!file_exists($backup_dir))
 {
-	mkdir($tmp_dir);
+	mkdir($backup_dir);
 }
 
-$dump_file=$tmp_dir.'/dump.sql';
+print "Backing Up database\n";
+$dump_file=$backup_dir.'/dump.sql';
 exec("mysqldump --host=$db_host --user=$db_user -p$db_pass $db_name > $dump_file");
 
 if(!file_exists($config_file))
@@ -34,5 +36,12 @@ if(!file_exists($config_file))
   exit(-1);
 }
 
+print "Backing Up config\n";
+exec("cp $config_file $backup_dir/");
 
+print "Backing up plugins\n";
+exec("cp -R $plugins_dir $backup_dir/");
+
+print "Exporting as tarball\n";
+exec("tar -czf $backup_dir/../".gmdate('Y-m-d,H_i_s').".tar.gz $backup_dir/*");
 ?>
